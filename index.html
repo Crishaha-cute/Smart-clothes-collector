@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Clothes Collector - Innovative IoT Solution</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/Logo.jpg">
+    <link rel="icon" type="image/jpeg" href="assets/Logo.jpg">
+    
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #252525;
+            --accent-color: #00d4ff;
+            --accent-hover: #00a8cc;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #333333;
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Space Grotesk', sans-serif;
+            --light-bg: #f5f5f5;
+            --light-text: #1a1a1a;
+            --light-card: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-margin-top: 100px; /* Consistent offset for scroll targets */
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            background-image: url('assets/background1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-color), #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            touch-action: pan-y pinch-zoom;
+        }
+
+        .hero-gradient {
+            background: radial-gradient(ellipse at top, rgba(0, 212, 255, 0.15) 0%, transparent 50%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+            touch-action: pan-y pinch-zoom;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .nav-item {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .settings-panel {
+            position: fixed;
+            right: -300px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            background: var(--secondary-bg);
+            border-radius: 20px 0 0 20px;
+            padding: 30px;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-toggle {
+            position: fixed;
+            right: 20px;
+            top: 20%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .settings-toggle:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .settings-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-close:hover {
+            background: var(--border-color);
+            transform: rotate(90deg);
+        }
+
+        .image-placeholder {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-placeholder img {
+            display: block;
+        }
+
+        .image-placeholder::before {
+            content: '📷';
+            font-size: 30px;
+            position: absolute;
+            opacity: 0.2;
+        }
+
+        .workflow-step {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .workflow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-bg);
+        }
+
+        .workflow-step::after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            width: 2px;
+            height: calc(100% + 20px);
+            background: var(--border-color);
+        }
+
+        .workflow-step:last-child::after {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .settings-panel {
+                width: 250px;
+                padding: 15px;
+                right: -250px;
+            }
+
+            .settings-panel h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .settings-panel .mb-6 {
+                margin-bottom: 0.75rem;
+            }
+
+            .settings-panel label {
+                font-size: 0.8rem;
+            }
+
+            .settings-panel select,
+            .settings-panel input,
+            .settings-panel button {
+                padding: 0.35rem;
+                font-size: 0.9rem;
+            }
+
+            /* Team member container adjustments */
+            .glass-effect {
+                padding: 0.75rem !important;
+            }
+
+            .min-h-220 {
+                min-height: 180px !important;
+            }
+
+            .w-24 {
+                width: 3.5rem !important;
+            }
+
+            .h-24 {
+                height: 3.5rem !important;
+            }
+
+            .mb-3 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .mt-2 {
+                margin-top: 0.5rem !important;
+            }
+
+            .text-lg {
+                font-size: 0.9rem !important;
+            }
+
+            .gap-8 {
+                gap: 1rem !important;
+            }
+
+            .mt-12 {
+                margin-top: 1.5rem !important;
+            }
+
+            /* Team section mobile adjustments */
+            #team .glass-effect {
+                padding: 1rem 0.5rem !important;
+            }
+
+            #team .mb-12 {
+                margin-bottom: 0.75rem !important;
+            }
+
+            #team .grid {
+                gap: 0.5rem !important;
+            }
+
+            #team .text-lg {
+                font-size: 0.75rem !important;
+            }
+
+            #team .glass-effect {
+                padding: 1rem !important;
+                margin: 0 0.5rem !important;
+            }
+
+            #team .grid {
+                gap: 1rem !important;
+            }
+
+            #team .w-24 {
+                width: 3rem !important;
+            }
+
+            #team .h-28 {
+                height: 3.5rem !important;
+            }
+
+            #team .text-lg {
+                font-size: 0.85rem !important;
+            }
+
+            #team .mb-12 {
+                margin-bottom: 1rem !important;
+            }
+
+            #team .mb-1 {
+                margin-bottom: 0.25rem !important;
+            }
+
+            #team .mb-2 {
+                margin-bottom: 0.25rem !important;
+            }
+        }
+
+        .logo-container {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #00ff88);
+            padding: 1px; /* Creates border effect */
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.5), rgba(0, 255, 136, 0.5));
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Touch scroll improvements */
+        html, body {
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .glass-effect, .card-hover {
+            touch-action: pan-y pinch-zoom;
+        }
+
+        /* Uniform scrolling styles */
+        html {
+            scroll-behavior: smooth;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body {
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        * {
+            scroll-margin-top: 100px; /* Consistent offset for scroll targets */
+        }
+
+        .glass-effect, .card-hover {
+            touch-action: pan-y pinch-zoom;
+        }
+
+        /* Remove any transform effects on scroll */
+        section {
+            transform: none !important;
+        }
+
+        /* Remove black background and adjust transparency */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Remove black backgrounds from sections */
+        section {
+            background: transparent !important;
+        }
+
+        #details, #contact {
+            background: transparent !important;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(8px);
+        }
+
+        .bg-black {
+            background: transparent !important;
+        }
+
+        .from-transparent.to-black\/50 {
+            background: transparent !important;
+        }
+
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+            /* Performance: avoid fixed background and heavy blur */
+            body {
+                background-attachment: fixed !important;
+            }
+            .glass-effect {
+                backdrop-filter: blur(6px) !important;
+                background: rgba(255, 255, 255, 0.06) !important; /* keep frosted look */
+            }
+
+            h1 {
+                font-size: 2.5rem !important;
+                line-height: 1.15 !important;
+                margin-bottom: 1rem !important;
+            }
+
+            #home .image-placeholder {
+                height: 280px !important;
+            }
+
+            /* Ensure comfortable reading */
+            #details p,
+            #home p {
+                line-height: 1.6 !important;
+            }
+            
+            h2 {
+                font-size: 2rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            h3 {
+                font-size: 1.5rem !important;
+                line-height: 1.25 !important;
+            }
+            
+            p {
+                font-size: 0.9rem !important;
+                line-height: 1.6 !important;
+            }
+            
+            .text-sm {
+                font-size: 0.8rem !important;
+            }
+            
+            .glass-effect {
+                padding: 1rem !important;
+            }
+            
+            .w-32 {
+                width: 6rem !important;
+            }
+            
+            .h-32 {
+                height: 6rem !important;
+            }
+            
+            .w-24 {
+                width: 4rem !important;
+            }
+            
+            .h-24 {
+                height: 4rem !important;
+            }
+            
+            .px-8 {
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+            }
+            
+            .py-4 {
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+            }
+            
+            .gap-8 {
+                gap: 1rem !important;
+            }
+            
+            .mt-8 {
+                margin-top: 1rem !important;
+            }
+            
+            .mb-4 {
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .px-6 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            
+            .py-20 {
+                padding-top: 3rem !important;
+                padding-bottom: 3rem !important;
+            }
+            
+            .image-placeholder {
+                height: 200px !important;
+            }
+
+            /* Team member adjustments for mobile */
+            .w-24.h-28 {
+                width: 4.5rem !important;
+                height: 5rem !important;
+            }
+
+            .min-h-220 {
+                min-height: 160px !important;
+            }
+
+            .card-hover {
+                transform: none !important;
+            }
+
+            .mb-3 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .text-lg {
+                font-size: 0.875rem !important;
+            }
+
+            .bg-gray-800\/90 {
+                padding: 0.5rem !important;
+                min-height: 150px !important;
+            }
+
+            .mb-3 {
+                margin-bottom: 0.25rem !important;
+            }
+
+            .mt-2 {
+                margin-top: 0.25rem !important;
+            }
+
+            .text-lg {
+                font-size: 0.8rem !important;
+                line-height: 1.2 !important;
+            }
+
+            .mb-2 {
+                margin-bottom: 0.25rem !important;
+            }
+
+            .mt-12 {
+                margin-top: 1rem !important;
+            }
+
+            .gap-8 {
+                gap: 0.75rem !important;
+            }
+
+            #team .glass-effect {
+                padding: 0.75rem 0.25rem !important;
+            }
+
+            #team .grid {
+                gap: 0.25rem !important;
+            }
+
+            #team .mb-8 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            #team .mb-3 {
+                margin-bottom: 0.15rem !important;
+            }
+
+            /* Mobile nav links: larger tap targets */
+            nav #mobile-menu a {
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+                font-size: 1rem !important;
+            }
+
+            /* CTA buttons: full width on mobile */
+            .cta-btn {
+                width: 100% !important;
+                justify-content: center !important;
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+                font-size: 1rem !important;
+            }
+
+            /* Back to top button: bigger and easier to tap */
+            .back-to-top {
+                width: 48px !important;
+                height: 48px !important;
+                right: 16px !important;
+                bottom: 16px !important;
+            }
+        }
+
+        /* Theme toggle and essential features */
+        :root {
+            --light-bg: #f5f5f5;
+            --light-text: #1a1a1a;
+            --light-card: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Developer images sizing */
+        .team-photo {
+            width: 7rem;   /* bigger on mobile */
+            height: 8.5rem;
+        }
+        @media (min-width: 768px) {
+            .team-photo {
+                width: 9rem;   /* md+ */
+                height: 11rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .team-photo {
+                width: 10rem;  /* lg+ */
+                height: 12rem;
+            }
+        }
+
+        /* Light theme styles */
+        body.light-theme {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        body.light-theme .glass-effect {
+            background: var(--light-card);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        /* Remove search styles */
+        .search-container,
+        .search-results {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass-effect px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <!-- Logo Placeholder -->
+                <div class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
+                    <img src="assets/Logo.jpg" alt="HAYA Logo" class="w-full h-full object-cover hover:scale-110 transition-transform duration-300">
+                </div>
+                <!-- Brand Name -->
+                <div class="text-2xl font-bold gradient-text" style="font-family: var(--font-heading)">HAYA</div>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-item text-gray-300 hover:text-white">Home</a>
+                <a href="#details" class="nav-item text-gray-300 hover:text-white">Project Details</a>
+                <a href="#team" class="nav-item text-gray-300 hover:text-white">Developers</a>
+                <a href="#contact" class="nav-item text-gray-300 hover:text-white">Contact</a>
+                <!-- Add the settings toggle here -->
+                <button class="settings-toggle-nav" onclick="toggleSettings()">⚙️</button>
+            </div>
+            <button id="mobile-menu-toggle" class="md:hidden text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+            <a href="#home" class="block py-2 text-gray-300 hover:text-white">Home</a>
+            <a href="#details" class="block py-2 text-gray-300 hover:text-white">Project Details</a>
+            <a href="#team" class="block py-2 text-gray-300 hover:text-white">Developers</a>
+            <a href="#contact" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+            <!-- Add the settings toggle here -->
+            <button class="block w-full text-left py-2 text-gray-300 hover:text-white" onclick="toggleSettings()">Settings</button>
+        </div>
+    </nav>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <button class="settings-close" onclick="toggleSettings()">×</button>
+        <h3 class="text-xl font-bold mb-6">Customize Theme</h3>
+        
+        <div class="mb-6">
+            <label class="block mb-2 text-sm">Accent Color</label>
+            <input type="color" id="accentColor" value="#00d4ff" class="w-full h-10 rounded cursor-pointer">
+        </div>
+        
+        <div class="mb-6">
+            <label class="block mb-2 text-sm">Background Style</label>
+            <select id="bgStyle" class="w-full px-3 py-2 rounded bg-gray-800 text-white">
+                <option value="dark">Deep Dark</option>
+                <option value="midnight">Midnight Blue</option>
+                <option value="purple">Dark Purple</option>
+            </select>
+        </div>
+        
+        <div class="mb-6">
+            <label class="block mb-2 text-sm">Font Family</label>
+            <select id="fontFamily" class="w-full px-3 py-2 rounded bg-gray-800 text-white">
+                <option value="Inter">Inter</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Poppins">Poppins</option>
+            </select>
+        </div>
+        
+        <button onclick="resetTheme()" class="w-full py-2 bg-gray-700 rounded hover:bg-gray-600 transition">
+            Reset to Default
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center hero-gradient pt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center fade-in">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6" style="font-family: var(--font-heading)">
+                <span class="gradient-text">HAYA: A Smart Clothes</span><br>
+                <span class="text-white">Collector</span>
+            </h1>
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Revolutionary IoT solution that automates clothes collection when rain is detected. 
+                Integrating Arduino, RFID, sensors, and smart alerts to protect your laundry from unexpected weather.
+            </p>
+            
+            <!-- Hero Image Placeholder -->
+            <div class="image-placeholder w-full max-w-4xl mx-auto h-96 rounded-2xl mb-8">
+                <img src="assets/project.jpg" alt="Project System Overview" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#details" class="cta-btn px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full font-semibold hover:scale-105 transition pulse-animation">
+                    Explore Project
+                </a>
+                <a href="#team" class="cta-btn px-8 py-4 glass-effect rounded-full font-semibold hover:bg-white/10 transition">
+                    Meet the Team
+                </a>
+            </div>
+            
+            <!-- Feature Pills -->
+            <div class="mt-12 flex flex-wrap gap-4 justify-center">
+                <span class="px-4 py-2 glass-effect rounded-full text-sm">🌧️ Rain Detection</span>
+                <span class="px-4 py-2 glass-effect rounded-full text-sm">🔊 Audio Alerts</span>
+                <span class="px-4 py-2 glass-effect rounded-full text-sm">🚨 LED Indicators</span>
+                <span class="px-4 py-2 glass-effect rounded-full text-sm">📱 RFID Control</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Details Section -->
+    <section id="details" class="py-20 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16" style="font-family: var(--font-heading)">
+                <span class="gradient-text">Project Details</span>
+            </h2>
+            
+            <!-- Problem & Solution -->
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <div class="glass-effect rounded-2xl p-8 card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-400">The Problem</h3>
+                    <p class="text-gray-300 mb-4">
+                        Unexpected rain can ruin clothes left outside to dry, causing inconvenience, 
+                        potential damage, and the need to rewash items. Traditional methods rely on 
+                        constant human monitoring and quick reaction times.
+                    </p>
+                    <div class="image-placeholder h-48 rounded-lg">
+                        <img src="assets/raining.jpg" alt="Problem Visualization" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-8 card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">Our Solution</h3>
+                    <p class="text-gray-300 mb-4">
+                        An automated system that detects rain using sensors and immediately activates 
+                        a servo motor to pull clothes to safety. Complete with audio announcements 
+                        and visual LED alerts for comprehensive notification.
+                        
+                    </p>
+                    <div class="image-placeholder h-48 rounded-lg">
+                        <img src="assets/solution.jpg" alt="Solution Diagram" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- How It Works -->
+            <div class="glass-effect rounded-2xl p-8 mb-16">
+                <h3 class="text-3xl font-bold mb-8 text-center">How It Works</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-8">
+                        <div class="workflow-step" data-step="1">
+                            <h4 class="font-bold mb-2">Rain Detection</h4>
+                            <p class="text-gray-300">Rain sensor continuously monitors weather conditions and triggers the system when moisture is detected.</p>
+                        </div>
+                        <div class="workflow-step" data-step="2">
+                            <h4 class="font-bold mb-2">Servo Activation</h4>
+                            <p class="text-gray-300">Servo motor immediately engages to pull the clothesline mechanism, bringing clothes to safety.</p>
+                        </div>
+                        <div class="workflow-step" data-step="3">
+                            <h4 class="font-bold mb-2">Alert System</h4>
+                            <p class="text-gray-300">DFPlayer Mini plays audio announcement while LEDs provide visual indication of system status.</p>
+                        </div>
+                        <div class="workflow-step" data-step="4">
+                            <h4 class="font-bold mb-2">LCD Display</h4>
+                            <p class="text-gray-300">Real-time status updates shown on I2C LCD display for system monitoring.</p>
+                        </div>
+                    </div>
+                    <div class="relative h-96 rounded-lg overflow-hidden">
+                        <video id="workflowVideo" class="w-full h-full object-cover rounded-lg" autoplay muted playsinline loop controls>
+                            <source src="assets/workflow-demo.mp4" type="video/mp4">
+                        </video>
+                        <div id="videoOverlay" class="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-lg font-semibold">
+                            Click to Play Demo
+                        </div>
+                    </div>
+                    <script>
+                        (function () {
+                            var video = document.getElementById('workflowVideo');
+                            var overlay = document.getElementById('videoOverlay');
+                            if (!video || !overlay) return;
+
+                            function hideOverlayWhenPlaying() {
+                                if (!video.paused) {
+                                    overlay.style.display = 'none';
+                                }
+                            }
+
+                            // Try to autoplay when possible (muted required by browsers)
+                            var playPromise = video.play();
+                            if (playPromise && typeof playPromise.then === 'function') {
+                                playPromise.then(hideOverlayWhenPlaying).catch(function () {
+                                    // Autoplay blocked: show overlay to prompt user gesture
+                                    overlay.style.display = '';
+                                });
+                            }
+
+                            // Clicking overlay should start playback and hide it
+                            overlay.addEventListener('click', function () {
+                                video.play().then(function () {
+                                    overlay.style.display = 'none';
+                                }).catch(function () {
+                                    // keep overlay visible if still blocked
+                                });
+                            });
+
+                            // Also hide overlay once playback starts by other means
+                            video.addEventListener('playing', hideOverlayWhenPlaying);
+                        })();
+                    </script>
+                </div>
+            </div>
+            
+            <!-- Technologies Used -->
+            <div class="glass-effect rounded-2xl p-8">
+                <h3 class="text-3xl font-bold mb-8 text-center">Technologies & Components</h3>
+                <div class="tech-grid">
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">🎛️</div>
+                        <h4 class="font-bold">Arduino Uno</h4>
+                        <p class="text-sm text-gray-400">Main Controller</p>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">📡</div>
+                        <h4 class="font-bold">RFID RC522</h4>
+                        <p class="text-sm text-gray-400">Access Control</p>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">🔊</div>
+                        <h4 class="font-bold">DFPlayer Mini</h4>
+                        <p class="text-sm text-gray-400">Audio Alerts</p>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">⚙️</div>
+                        <h4 class="font-bold">Servo Motor</h4>
+                        <p class="text-sm text-gray-400">Mechanical Action</p>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">💧</div>
+                        <h4 class="font-bold">Rain Sensor</h4>
+                        <p class="text-sm text-gray-400">Weather Detection</p>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">📟</div>
+                        <h4 class="font-bold">LCD I2C</h4>
+                        <p class="text-sm text-gray-400">Status Display</p>
+                    </div>
+                    <div class="bg-gray-800/50 rounded-lg p-4 text-center card-hover">
+                        <div class="text-3xl mb-2">🔋</div>
+                        <h4 class="font-bold">Power Bank</h4>
+                        <p class="text-sm text-gray-400">Power Supply</p>
+                    </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16" style="font-family: var(--font-heading)">
+                <span class="gradient-text">Meet Our Team</span>
+            </h2>
+            
+            <div class="glass-effect rounded-2xl p-6 max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="flex flex-col items-center">
+                        <div class="team-photo rounded-lg mb-3 overflow-hidden">
+                            <img src="assets/team/member1.jpeg" alt="Cris Manzano" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Cris Manzano</h3>
+                        <p class="text-cyan-400 mb-2">Developer</p>
+                        <a href="https://www.facebook.com/gl.manzano" class="text-gray-400 hover:text-blue-500 transition text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="team-photo rounded-lg mb-3 overflow-hidden">
+                            <img src="assets/team/member2.jpg" alt="Justine Jay Eman" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Justine Jay Eman</h3>
+                        <p class="text-green-400 mb-2">Developer</p>
+                        <a href="https://www.facebook.com/justine.eman.9" class="text-gray-400 hover:text-blue-500 transition text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="team-photo rounded-lg mb-3 overflow-hidden">
+                            <img src="assets/team/member1.jpeg" alt="Jhustine Bangalao" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Jhustine Bangalao</h3>
+                        <p class="text-purple-400 mb-2">Developer</p>
+                        <a href="https://www.facebook.com/espinoza.jhustin" class="text-gray-400 hover:text-blue-500 transition text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                    <div class="flex flex-col items-center">
+                        <div class="team-photo rounded-lg mb-3 overflow-hidden">
+                            <img src="assets/team/member4.jpg" alt="Lovely Mae Limbanganon" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Lovely Mae Limbanganon</h3>
+                        <p class="text-yellow-400 mb-2">Developer</p>
+                        <a href="https://www.facebook.com/lovelymae.limbanganon.5" class="text-gray-400 hover:text-blue-500 transition text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="team-photo rounded-lg mb-3 overflow-hidden">
+                            <img src="assets/team/member5.jpg" alt="Bernadette Estal" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Bernadette Estal</h3>
+                        <p class="text-orange-400 mb-2">Developer</p>
+                        <a href="https://www.facebook.com/jeankyth.estal" class="text-gray-400 hover:text-blue-500 transition text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-gradient-to-b from-transparent to-black/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Project Gallery</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="image-placeholder h-64 rounded-lg card-hover">
+                    <img src="assets/gallery/1.jpg" alt="System Overview" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="image-placeholder h-64 rounded-lg card-hover">
+                    <img src="assets/gallery/2.jpg" alt="Circuit Diagram" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="image-placeholder h-64 rounded-lg card-hover">
+                    <img src="assets/gallery/3.jpg" alt="Testing Phase" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="image-placeholder h-64 rounded-lg card-hover">
+                    <img src="assets/gallery/4.jpg" alt="Component Layout" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="image-placeholder h-64 rounded-lg card-hover">
+                    <img src="assets/gallery/5.jpg" alt="Final Assembly" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="image-placeholder h-64 rounded-lg card-hover">
+                    <img src="assets/gallery/6.jpg" alt="Live Demo" class="w-full h-full object-cover rounded-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact Section -->
+    <footer id="contact" class="py-12 bg-black border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold gradient-text mb-4">Haya: Smart Clothes Collector</h3>
+                    <p class="text-gray-400">
+                        Innovative IoT solution for automated laundry protection.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#details" class="hover:text-white transition">Project Details</a></li>
+                        <li><a href="#team" class="hover:text-white transition">Developers</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Connect</h4>
+                    <p class="text-gray-400 mb-4">
+                        📩 Haya@gmail.com<br>
+                    </p>
+                </div>
+            </div>
+            
+            
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Settings Panel
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('active');
+        }
+        
+        // Theme Customization
+        const accentColorInput = document.getElementById('accentColor');
+        const bgStyleSelect = document.getElementById('bgStyle');
+        const fontSelect = document.getElementById('fontFamily'); // Fixed typo
+
+        if (accentColorInput) {
+            accentColorInput.addEventListener('change', (e) => {
+                const color = e.target.value;
+                document.documentElement.style.setProperty('--accent-color', color);
+                
+                // Calculate and set hover color
+                const rgb = parseInt(color.slice(1), 16);
+                const r = (rgb >> 16) & 0xff;
+                const g = (rgb >> 8) & 0xff;
+                const b = rgb & 0xff;
+                const hoverColor = `rgb(${Math.max(0, r-30)}, ${Math.max(0, g-30)}, ${Math.max(0, b-30)})`;
+                document.documentElement.style.setProperty('--accent-hover', hoverColor);
+            });
+        }
+
+        if (bgStyleSelect) {
+            bgStyleSelect.addEventListener('change', (e) => {
+                const styles = {
+                    dark: {
+                        primary: '#0a0a0a',
+                        secondary: '#1a1a1a',
+                        card: '#252525'
+                    },
+                    midnight: {
+                        primary: '#0a0f1c',
+                        secondary: '#141d2b',
+                        card: '#1e2936'
+                    },
+                    purple: {
+                        primary: '#0a0014',
+                        secondary: '#1a0f2e',
+                        card: '#2d1b69'
+                    }
+                };
+
+                const style = styles[e.target.value];
+                if (style) {
+                    document.documentElement.style.setProperty('--primary-bg', style.primary);
+                    document.documentElement.style.setProperty('--secondary-bg', style.secondary);
+                    document.documentElement.style.setProperty('--card-bg', style.card);
+                }
+            });
+        }
+
+        if (fontSelect) {
+            fontSelect.addEventListener('change', (e) => {
+                const font = e.target.value;
+                document.documentElement.style.setProperty('--font-main', `'${font}', sans-serif`);
+                
+                // Load font if not already loaded
+                const link = document.createElement('link');
+                link.href = `https://fonts.googleapis.com/css2?family=${font.replace(' ', '+')}:wght@300;400;500;600;700&display=swap`;
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            });
+        }
+
+        function resetTheme() {
+            const defaults = {
+                accent: '#00d4ff',
+                accentHover: '#00a8cc',
+                primary: '#0a0a0a',
+                secondary: '#1a1a1a',
+                card: '#252525',
+                font: 'Inter'
+            };
+
+            Object.entries({
+                '--accent-color': defaults.accent,
+                '--accent-hover': defaults.accentHover,
+                '--primary-bg': defaults.primary,
+                '--secondary-bg': defaults.secondary,
+                '--card-bg': defaults.card,
+                '--font-main': `'${defaults.font}', sans-serif`
+            }).forEach(([key, value]) => {
+                document.documentElement.style.setProperty(key, value);
+            });
+
+            if (accentColorInput) accentColorInput.value = defaults.accent;
+            if (bgStyleSelect) bgStyleSelect.value = 'dark';
+            if (fontSelect) fontSelect.value = defaults.font;
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('#home');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Dynamic year in footer
+        const year = new Date().getFullYear();
+        document.querySelector('footer p').innerHTML = 
+            document.querySelector('footer p').innerHTML.replace('2024', year);
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // Interactive tech cards
+        document.querySelectorAll('.tech-grid > div').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05) rotate(1deg)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Typewriter effect for hero title (optional enhancement)
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Smart Clothes Collector Website Loaded');
+        });
+
+        // Remove loading and animation effects
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.remove('fade-in');
+        });
+
+        // Add keyboard navigation for settings panel
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const panel = document.getElementById('settingsPanel');
+                panel.classList.remove('active');
+            }
+        });
+
+        // Save theme preferences to localStorage
+        function saveThemePreferences() {
+            const preferences = {
+                accentColor: accentColorInput.value,
+                bgStyle: bgStyleSelect.value,
+                font: fontSelect.value
+            };
+            // Note: localStorage won't work in this environment
+            // In production, uncomment: localStorage.setItem('themePreferences', JSON.stringify(preferences));
+        }
+
+        // Load theme preferences
+        function loadThemePreferences() {
+            // Note: localStorage won't work in this environment
+            // In production, uncomment and implement loading from localStorage
+        }
+
+        // Add event listeners for saving preferences
+        accentColorInput.addEventListener('change', saveThemePreferences);
+        bgStyleSelect.addEventListener('change', saveThemePreferences);
+        fontSelect.addEventListener('change', saveThemePreferences);
+
+        // Touch scroll support
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!touchStartY) {
+                return;
+            }
+            touchEndY = e.touches[0].clientY;
+            const yDiff = touchStartY - touchEndY;
+            
+            // Smooth scroll
+            window.scrollBy({
+                top: yDiff * 0.5, // Reduced multiplier for smoother scrolling
+                behavior: 'smooth'
+            });
+            
+            touchStartY = touchEndY;
+        });
+
+        document.addEventListener('touchend', () => {
+            touchStartY = 0;
+            touchEndY = 0;
+        });
+
+        // Add touch-action CSS to prevent browser default touch handling
+        document.body.style.touchAction = 'pan-x pinch-zoom';
+
+        // Remove existing scroll observers and parallax effects
+        // Add this unified scroll behavior
+        document.addEventListener('scroll', () => {
+            // Disable transform effects during scroll
+            document.querySelectorAll('section, .card-hover').forEach(el => {
+                el.style.transform = 'none';
+            });
+        });
+
+        // Simplified smooth scroll for all clickable elements
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Page loader
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.classList.add('hidden');
+                loader.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Theme initialization and persistence
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = document.documentElement;
+            const panel = document.getElementById('settingsPanel');
+            
+            // Set initial theme
+            if (accentColorInput) {
+                const color = accentColorInput.value;
+                root.style.setProperty('--accent-color', color);
+                root.style.setProperty('--accent-hover', calculateHoverColor(color));
+            }
+
+            if (bgStyleSelect) {
+                applyBackgroundStyle(bgStyleSelect.value);
+            }
+
+            if (fontSelect) {
+                applyFont(fontSelect.value);
+            }
+        });
+
+        function calculateHoverColor(color) {
+            const rgb = parseInt(color.slice(1), 16);
+            const r = Math.max(0, ((rgb >> 16) & 0xff) - 30);
+            const g = Math.max(0, ((rgb >> 8) & 0xff) - 30);
+            const b = Math.max(0, (rgb & 0xff) - 30);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function applyBackgroundStyle(style) {
+            const styles = {
+                dark: {
+                    primary: '#0a0a0a',
+                    secondary: '#1a1a1a',
+                    card: '#252525'
+                },
+                midnight: {
+                    primary: '#0a0f1c',
+                    secondary: '#141d2b',
+                    card: '#1e2936'
+                },
+                purple: {
+                    primary: '#0a0014',
+                    secondary: '#1a0f2e',
+                    card: '#2d1b69'
+                }
+            };
+
+            const selected = styles[style];
+            if (selected) {
+                document.documentElement.style.setProperty('--primary-bg', selected.primary);
+                document.documentElement.style.setProperty('--secondary-bg', selected.secondary);
+                document.documentElement.style.setProperty('--card-bg', selected.card);
+            }
+        }
+
+        function applyFont(font) {
+            document.documentElement.style.setProperty('--font-main', `'${font}', sans-serif`);
+        }
+    </script>
+</body>
+</html>
